@@ -194,6 +194,28 @@
             display: flex;
             gap: 10px;
         }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -450,9 +472,54 @@
 
         function copyCode() {
             const codeTextarea = document.getElementById('mermaidCode');
-            codeTextarea.select();
-            document.execCommand('copy');
-            alert('代码已复制到剪贴板！');
+            const code = codeTextarea.value;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(() => {
+                    showNotification('代码已复制到剪贴板！');
+                }).catch(() => {
+                    // Fallback for older browsers
+                    fallbackCopy(codeTextarea);
+                });
+            } else {
+                fallbackCopy(codeTextarea);
+            }
+        }
+
+        function fallbackCopy(textarea) {
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showNotification('代码已复制到剪贴板！');
+            } catch (err) {
+                showNotification('复制失败，请手动复制', true);
+            }
+        }
+
+        function showNotification(message, isError = false) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background-color: ${isError ? '#f44336' : '#4CAF50'};
+                color: white;
+                border-radius: 4px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
 
         // 初始化时添加一个示例 section
