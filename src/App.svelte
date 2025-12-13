@@ -49,11 +49,12 @@
   });
 
   function addSection() {
+    const newId = sectionCounter++;
     sections = [
       ...sections,
       {
-        id: sectionCounter++,
-        name: `Section ${sectionCounter}`,
+        id: newId,
+        name: `Section ${newId + 1}`,
         tasks: [{ name: '', id: '', startDate: '', dependencies: '', duration: '' }]
       }
     ];
