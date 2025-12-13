@@ -194,6 +194,7 @@
       {#each sections as section (section.id)}
         <Section
           {section}
+          allSections={sections}
           on:remove={() => removeSection(section.id)}
           on:update={updateSection}
           on:updateTasks={updateTasks}

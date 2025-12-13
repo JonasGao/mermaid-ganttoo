@@ -2,8 +2,16 @@
   import { createEventDispatcher } from 'svelte';
 
   export let section;
+  export let allSections = [];
 
   const dispatch = createEventDispatcher();
+
+  // Get all available tasks from all sections
+  $: availableTasks = allSections.flatMap(s => 
+    s.tasks
+      .filter(t => t.id && t.name)
+      .map(t => ({ id: t.id, name: t.name, sectionName: s.name }))
+  );
 
   function updateSectionName(event) {
     dispatch('update', {
@@ -86,12 +94,19 @@
             />
           </td>
           <td>
-            <input
-              type="text"
+            <select
               value={task.dependencies}
               on:change={(e) => updateTask(index, 'dependencies', e.target.value)}
-              placeholder="依赖ID"
-            />
+            >
+              <option value="">无依赖</option>
+              {#each availableTasks as availableTask}
+                {#if availableTask.id !== task.id}
+                  <option value={availableTask.id}>
+                    {availableTask.name} ({availableTask.id}) - {availableTask.sectionName}
+                  </option>
+                {/if}
+              {/each}
+            </select>
           </td>
           <td>
             <input
@@ -127,6 +142,7 @@
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 2px solid #eee;
+    gap: 20px;
   }
 
   .section-name-input {
@@ -159,12 +175,25 @@
 
   input[type="text"],
   input[type="date"],
-  input[type="number"] {
+  input[type="number"],
+  select {
     width: 100%;
-    padding: 5px;
+    padding: 5px 8px;
     border: 1px solid #ddd;
     border-radius: 3px;
     font-size: 13px;
+    height: 32px;
+    box-sizing: border-box;
+  }
+
+  select {
+    cursor: pointer;
+    background-color: white;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: #2196F3;
   }
 
   button {
@@ -195,11 +224,13 @@
   }
 
   .btn-small {
-    padding: 8px 12px;
+    padding: 8px 16px;
     font-size: 12px;
     height: 36px;
+    min-width: 80px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
   }
 
   .button-group {
