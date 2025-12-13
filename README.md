@@ -1,6 +1,6 @@
 # Mermaid 甘特图工具
 
-一个交互式的甘特图编辑工具，基于 Mermaid.js 实现。
+一个基于 Svelte 的交互式甘特图编辑工具，使用本地打包的 Mermaid.js 实现。
 
 ## 功能特性
 
@@ -31,11 +31,28 @@
 
 ## 使用方法
 
-1. 直接在浏览器中打开 `index.html` 文件
-2. 使用"添加 Section"按钮创建新的任务组
-3. 在每个 Section 中添加任务并填写相关信息
-4. 右侧会实时显示生成的甘特图
-5. 可以点击"复制代码"按钮复制 Mermaid 代码用于其他地方
+### 开发模式
+
+```bash
+npm install
+npm run dev
+```
+
+然后在浏览器中打开 `http://localhost:5173`
+
+### 生产构建
+
+```bash
+npm run build
+```
+
+构建后的文件在 `dist` 目录下，可以部署到任何静态文件服务器。
+
+### 预览生产构建
+
+```bash
+npm run preview
+```
 
 ## 示例
 
@@ -43,10 +60,33 @@
 
 ## 技术栈
 
-- HTML5
-- CSS3
-- JavaScript (ES6+)
-- Mermaid.js 10.x
+- **Svelte 5** - 现代化的响应式框架
+- **Vite** - 快速的构建工具
+- **Mermaid.js 11** - 本地打包，无需 CDN
+- **JavaScript (ES6+)**
+
+## 项目结构
+
+```
+├── src/
+│   ├── App.svelte          # 主应用组件
+│   ├── lib/
+│   │   ├── Section.svelte  # Section 组件
+│   │   └── Notification.svelte  # 通知组件
+│   └── main.js             # 入口文件
+├── index.html              # HTML 模板
+├── package.json            # 依赖配置
+└── vite.config.js          # Vite 配置
+```
+
+## 特性
+
+- ✅ 无需 CDN - Mermaid.js 已本地打包
+- ✅ 组件化架构 - 使用 Svelte 组件
+- ✅ 热模块替换 - 开发时实时更新
+- ✅ 生产优化 - Vite 自动优化和压缩
+- ✅ 现代浏览器支持 - 使用 Clipboard API
+- ✅ 优雅的通知系统 - Toast 提示
 
 ## 许可证
 
