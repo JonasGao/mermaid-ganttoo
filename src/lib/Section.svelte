@@ -132,10 +132,11 @@
   .section-name-input {
     font-size: 16px;
     font-weight: bold;
-    padding: 5px 10px;
+    padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     width: 200px;
+    height: 36px;
   }
 
   table {
@@ -194,8 +195,11 @@
   }
 
   .btn-small {
-    padding: 4px 8px;
+    padding: 8px 12px;
     font-size: 12px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .button-group {

@@ -8,6 +8,7 @@
   let sectionCounter = 0;
   let mermaidCode = '';
   let notification = { show: false, message: '', isError: false };
+  let showCodeModal = false;
 
   onMount(() => {
     mermaid.initialize({
@@ -171,10 +172,20 @@
       notification = { show: false, message: '', isError: false };
     }, 3000);
   }
+
+  function toggleCodeModal() {
+    showCodeModal = !showCodeModal;
+  }
+
+  function closeModal(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+      showCodeModal = false;
+    }
+  }
 </script>
 
 <div class="container">
-  <div class="left-panel">
+  <div class="top-panel">
     <div class="header">
       <h1>任务配置</h1>
       <button class="btn-primary add-section-btn" on:click={addSection}>添加 Section</button>
@@ -192,21 +203,35 @@
     </div>
   </div>
 
-  <div class="right-panel">
+  <div class="bottom-panel">
     <div class="header">
       <h1>甘特图预览</h1>
-      <button class="btn-secondary" on:click={renderGantt}>刷新图表</button>
+      <div class="button-group">
+        <button class="btn-secondary" on:click={toggleCodeModal}>查看代码</button>
+        <button class="btn-secondary" on:click={renderGantt}>刷新图表</button>
+      </div>
     </div>
     <div id="mermaidOutput"></div>
-    <div class="code-section">
-      <div class="code-header">
-        <h2>Mermaid 代码</h2>
-        <button class="btn-secondary" on:click={copyCode}>复制代码</button>
-      </div>
-      <textarea id="mermaidCode" readonly bind:value={mermaidCode}></textarea>
-    </div>
   </div>
 </div>
+
+{#if showCodeModal}
+  <div class="modal-overlay" on:click={closeModal}>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Mermaid 代码</h2>
+        <button class="btn-close" on:click={toggleCodeModal}>✕</button>
+      </div>
+      <div class="modal-body">
+        <textarea id="mermaidCode" readonly bind:value={mermaidCode}></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" on:click={copyCode}>复制代码</button>
+        <button class="btn-primary" on:click={toggleCodeModal}>关闭</button>
+      </div>
+    </div>
+  </div>
+{/if}
 
 {#if notification.show}
   <Notification message={notification.message} isError={notification.isError} />
@@ -227,19 +252,20 @@
 
   .container {
     display: flex;
+    flex-direction: column;
     height: 100vh;
   }
 
-  .left-panel {
-    flex: 1;
+  .top-panel {
+    flex: 0 0 50%;
     overflow-y: auto;
     padding: 20px;
     background-color: #f5f5f5;
-    border-right: 2px solid #ddd;
+    border-bottom: 2px solid #ddd;
   }
 
-  .right-panel {
-    flex: 1;
+  .bottom-panel {
+    flex: 0 0 50%;
     overflow: auto;
     padding: 20px;
     background-color: #ffffff;
@@ -293,6 +319,11 @@
     background-color: #0b7dda;
   }
 
+  .button-group {
+    display: flex;
+    gap: 10px;
+  }
+
   #mermaidOutput {
     flex: 1;
     border: 1px solid #ddd;
@@ -302,25 +333,86 @@
     overflow: auto;
   }
 
-  .code-section {
-    margin-top: 20px;
+  /* Modal styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
   }
 
-  .code-header {
+  .modal-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    padding: 20px;
+    border-bottom: 2px solid #eee;
   }
 
-  #mermaidCode {
+  .modal-header h2 {
+    margin: 0;
+  }
+
+  .btn-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+
+  .btn-close:hover {
+    background-color: #f0f0f0;
+  }
+
+  .modal-body {
+    flex: 1;
+    padding: 20px;
+    overflow: auto;
+  }
+
+  .modal-body #mermaidCode {
     width: 100%;
-    min-height: 150px;
-    padding: 10px;
+    height: 400px;
+    padding: 15px;
     font-family: 'Courier New', monospace;
     font-size: 13px;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #f9f9f9;
+    resize: vertical;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px;
+    border-top: 2px solid #eee;
   }
 </style>
