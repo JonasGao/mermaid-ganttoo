@@ -6,6 +6,7 @@
 
   let sections = [];
   let sectionCounter = 0;
+  let taskCounter = 5; // Start from 5 since example data uses task1-task4
   let mermaidCode = '';
   let notification = { show: false, message: '', isError: false };
   let showCodeModal = false;
@@ -51,12 +52,13 @@
 
   function addSection() {
     const newId = sectionCounter++;
+    const newTaskId = `task${taskCounter++}`;
     sections = [
       ...sections,
       {
         id: newId,
         name: `Section ${newId + 1}`,
-        tasks: [{ name: '', id: '', startDate: '', dependencies: '', duration: '' }]
+        tasks: [{ name: '', id: newTaskId, startDate: '', dependencies: '', duration: '' }]
       }
     ];
     renderGantt();
@@ -75,6 +77,10 @@
       sections = sections;
       renderGantt();
     }
+  }
+
+  function generateTaskId() {
+    return `task${taskCounter++}`;
   }
 
   function updateTasks(event) {
@@ -195,6 +201,7 @@
         <Section
           {section}
           allSections={sections}
+          {generateTaskId}
           on:remove={() => removeSection(section.id)}
           on:update={updateSection}
           on:updateTasks={updateTasks}

@@ -3,6 +3,7 @@
 
   export let section;
   export let allSections = [];
+  export let generateTaskId;
 
   const dispatch = createEventDispatcher();
 
@@ -22,7 +23,8 @@
   }
 
   function addTask() {
-    const updatedTasks = [...section.tasks, { name: '', id: '', startDate: '', dependencies: '', duration: '' }];
+    const newTaskId = generateTaskId();
+    const updatedTasks = [...section.tasks, { name: '', id: newTaskId, startDate: '', dependencies: '', duration: '' }];
     dispatch('updateTasks', { sectionId: section.id, tasks: updatedTasks });
   }
 
@@ -74,7 +76,7 @@
             <input
               type="text"
               value={task.name}
-              on:change={(e) => updateTask(index, 'name', e.target.value)}
+              on:input={(e) => updateTask(index, 'name', e.target.value)}
               placeholder="任务名称"
             />
           </td>
@@ -82,7 +84,7 @@
             <input
               type="text"
               value={task.id}
-              on:change={(e) => updateTask(index, 'id', e.target.value)}
+              on:input={(e) => updateTask(index, 'id', e.target.value)}
               placeholder="task_id"
             />
           </td>
@@ -112,7 +114,7 @@
             <input
               type="number"
               value={task.duration}
-              on:change={(e) => updateTask(index, 'duration', e.target.value)}
+              on:input={(e) => updateTask(index, 'duration', e.target.value)}
               placeholder="天数"
               min="1"
             />
