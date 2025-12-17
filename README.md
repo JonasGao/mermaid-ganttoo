@@ -88,6 +88,22 @@ npm run preview
 - ✅ 现代浏览器支持 - 使用 Clipboard API
 - ✅ 优雅的通知系统 - Toast 提示
 
+## 发布版本
+
+项目使用 GitHub Actions 自动化发布流程。创建新版本的步骤：
+
+1. 更新 `package.json` 中的版本号
+2. 创建并推送版本标签：
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+3. GitHub Actions 将自动：
+   - 构建项目
+   - 打包 dist 目录为 zip 文件
+   - 创建 GitHub Release
+   - 上传打包文件到 Release
+
 ## 许可证
 
 MIT
