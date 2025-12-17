@@ -205,7 +205,6 @@
           on:remove={() => removeSection(section.id)}
           on:update={updateSection}
           on:updateTasks={updateTasks}
-          on:change={renderGantt}
         />
       {/each}
     </div>

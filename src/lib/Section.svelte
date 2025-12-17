@@ -39,7 +39,6 @@
     const updatedTasks = [...section.tasks];
     updatedTasks[index][field] = value;
     dispatch('updateTasks', { sectionId: section.id, tasks: updatedTasks });
-    dispatch('change');
   }
 </script>
 
